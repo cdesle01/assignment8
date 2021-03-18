@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.js" 
+	integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" 
+	crossorigin="anonymous"></script>
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Jade Delight</title>
+	<style type="text/css">
+	.errMsg {color: #D20E11; border: solid 1px #d20e11; display:none;  
+		padding: 1px 15px;	}
+		
+	</style>
+</head>
+
+<body>
+	<script language="javascript">
+	
+	function MenuItem(name, cost)
+	{
+		this.name = name;
+		this.cost=cost;
+	}
+	
+	menuItems = new Array(
+		new MenuItem("Chicken Chop Suey", 4.5),
+		new MenuItem("Sweet and Sour Pork", 6.25),
+		new MenuItem("Shrimp Lo Mein", 5.25),
+		new MenuItem("Moo Shi Chicken", 6.5),
+		new MenuItem("Fried Rice", 2.35)
+	);
+	
+	function makeSelect(name, minRange, maxRange)
+	{
+		var t= "";
+		t = "<select name='" + name + "' size='1'>";
+		for (j=minRange; j<=maxRange; j++)
+		t += "<option>" + j + "</option>";
+		t+= "</select>"; 
+		return t;
+	}
+	
+	//MY CODE BELOW THIS!!
+	
+	//when the document loads this will show the correct textboxes for the 
+	//option selected, and update the page when the quantity of items is 
+	//changed 
+	$(document).ready (function () {
+		document.getElementById("hide").style.display = "none";
+		subtotal = 0;
+		ccsPrice = 0;
+		sspPrice = 0;
+		slmPrice = 0;
+		mscPrice = 0;
+		frPrice = 0;
+		
+		//shows the correct text boxes
+		$('input[type=radio][name=p_or_d]').change(function() {
+			if (this.value == 'pickup') {
+				document.getElementById("hide").style.display = "none";
+			}
+			else if (this.value == 'delivery') {
+				document.getElementById("hide").style.display = "inline";
+			}
+		});
+		
+		//updates the form when quantities are changed
+		$("select[name=quan0]").change(function()
+		{
+			ccsNum = document.getElementsByName("quan0")[0].value;
+			ccsPrice = ccsNum * menuItems[0].cost.toFixed(2);
+			document.getElementsByName("cost")[0].value = ccsPrice.toFixed(2);
+			subtotal += ccsPrice;
+			document.getElementsByName("subtotal")[0].value = 
+			subtotal.toFixed(2);
+			tax = subtotal * .0625;
+			document.getElementsByName("tax")[0].value = tax.toFixed(2);
+			total = subtotal + tax;
+			document.getElementsByName("total")[0].value = total.toFixed(2);
+			
+		});
+		
+		$("select[name=quan1]").change(function()
+		{
+			sspNum = document.getElementsByName("quan1")[0].value;
+			sspPrice = sspNum * menuItems[1].cost.toFixed(2);
+			document.getElementsByName("cost")[1].value = sspPrice.toFixed(2);
+			subtotal += sspPrice;
+			document.getElementsByName("subtotal")[0].value = 
+			subtotal.toFixed(2);
+			tax = subtotal * .0625;
+			document.getElementsByName("tax")[0].value = tax.toFixed(2);
+			total = subtotal + tax;
+			document.getElementsByName("total")[0].value = total.toFixed(2);
+		});
+		
+		$("select[name=quan2]").change(function()
+		{
+			slmNum = document.getElementsByName("quan2")[0].value;
+			slmPrice = slmNum * menuItems[2].cost.toFixed(2);
+			document.getElementsByName("cost")[2].value = slmPrice.toFixed(2);
+			subtotal += slmPrice;
+			document.getElementsByName("subtotal")[0].value = 
+			subtotal.toFixed(2);
+			tax = subtotal * .0625;
+			document.getElementsByName("tax")[0].value = tax.toFixed(2);
+			total = subtotal + tax;
+			document.getElementsByName("total")[0].value = total.toFixed(2);
+		});
+		
+		$("select[name=quan3]").change(function()
+		{
+			mscNum = document.getElementsByName("quan3")[0].value;
+			mscPrice = mscNum * menuItems[3].cost.toFixed(2);
+			document.getElementsByName("cost")[3].value = mscPrice.toFixed(2);
+			subtotal += mscPrice;
+			document.getElementsByName("subtotal")[0].value = 
+			subtotal.toFixed(2);
+			tax = subtotal * .0625;
+			document.getElementsByName("tax")[0].value = tax.toFixed(2);
+			total = subtotal + tax;
+			document.getElementsByName("total")[0].value = total.toFixed(2);
+		});
+		
+		$("select[name=quan4]").change(function()
+		{
+			frNum = document.getElementsByName("quan4")[0].value;
+			frPrice = frNum * menuItems[4].cost.toFixed(2);
+			document.getElementsByName("cost")[4].value = frPrice.toFixed(2);
+			subtotal += frPrice;
+			document.getElementsByName("subtotal")[0].value = 
+			subtotal.toFixed(2);
+			tax = subtotal * .0625;
+			document.getElementsByName("tax")[0].value = tax.toFixed(2);
+			total = subtotal + tax;
+			document.getElementsByName("total")[0].value = total.toFixed(2);
+		});
+	})
+	
+	//checks and returns the value of the radio button
+	function checkVal()
+	{
+		value = $('input:radio[name="p_or_d"]:checked').val();
+		return value;
+	}
+	
+	//called when the form is submitted and checks to make sure all required 
+	//aspects are filled out properly 
+	function validate()
+	{
+		error = false;
+		delivery = false;	
+		document.getElementById("errLName").style.display = "none";
+		document.getElementById("errPhone").style.display = "none";
+		if (checkVal() == 'delivery')
+		{
+			delivery = true;
+		}
+		with (document.order)
+		{
+			if (lname.value == "")
+			{
+				document.getElementById("errLName").style.display = 
+				"inline-block";
+				error = true;
+				lname.select();
+			}
+			if (phone.value == "" || !validatePhone(phone.value))
+			{
+				document.getElementById("errPhone").style.display = 
+				"inline-block";
+				error = true;
+				phone.select();
+			}
+			
+			if (delivery)
+			{
+				if (street.value == "")
+				{
+					document.getElementById("errStreet").style.display = 
+					"inline-block";
+					error = true;
+					lname.select();
+				}
+				if (city.value == "")
+				{
+					document.getElementById("errCity").style.display = 
+					"inline-block";
+					error = true;
+					lname.select();
+				}
+			}
+			a = document.getElementsByName("quan0")[0].value;
+			b = document.getElementsByName("quan1")[0].value;
+			c = document.getElementsByName("quan2")[0].value;
+			d = document.getElementsByName("quan3")[0].value;
+			e = document.getElementsByName("quan4")[0].value;
+			
+			if (a == 0 && b == 0 && c == 0 && d == 0 && e == 0)
+			{
+				document.getElementById("errSelect").style.display = 
+				"inline-block";
+				error = true;
+			}
+		}
+		//opens a new window if the form is validated 
+		if (!error)
+		{
+			openWindow(a, b, c, d, e, delivery);
+		}
+		return !error;
+	}
+	
+	//when the form is submitted, opens a new window and displays the desired
+	//message
+	function openWindow(ccs, ssp, slm, msc, fr, delivery)
+	{
+		var myWindow = window.open("", "_self");
+		myWindow.document.write("<p>Thank you for your order!</p>");
+		myWindow.document.write("<p>Your Order:</p>");
+		if (ccs != 0)
+		{
+			myWindow.document.write("<p>" + ccs + " Chicken Chop Suey</p>");
+		}
+		if (ssp != 0)
+		{
+			myWindow.document.write("<p>" + ssp + " Sweet and Sour Pork</p>");
+		}
+		if (slm != 0)
+		{
+			myWindow.document.write("<p>" +slm + " Shrimp Lo Mein</p>");
+		}
+		if (msc != 0)
+		{
+			myWindow.document.write("<p>" + msc + " Moo Shi Chicken</p>");
+		}
+		if (fr != 0)
+		{
+			myWindow.document.write("<p>" + fr + " Fried Rice</p>");
+		}
+		cost = ccs*4.50 + ssp*6.25 + slm*5.25 + msc*6.50 + fr*2.35;
+		total = cost*.0625 + cost;
+		myWindow.document.write("<p>Total Order Price: $" + total.toFixed(2) 
+		+ "</p>");
+		
+		time = getTime(delivery);
+		if (delivery)
+		{
+			myWindow.document.write("<p>Expected Delivery Time: " + time 
+			+ "</p>");
+		}
+		else 
+		{
+			myWindow.document.write("<p>Expected Pickup Time: " + time 
+			+ "</p>");
+		}
+	}
+	
+	//gets the current time from the computer and adds the desired pickup or
+	//delivery time, also formats the time
+	function getTime(delivery)
+	{
+		date = new Date();
+		hours = date.getHours();
+		minutes = date.getMinutes();
+		ampm = " am"
+		if (delivery)
+		{
+			minutes = minutes + 30;
+		}
+		else 
+		{
+			minutes = minutes + 15;
+		}
+		if (minutes >= 60)
+		{
+			hours++;
+			minutes -= 60;
+		}
+		if (hours == 25)
+		{
+			hours = 1;
+		}
+		if (hours % 12 > 0)
+		{
+			hours = hours % 12;
+			ampm = " pm";
+		}
+		return hours + ":" + minutes + ampm;
+	}
+	
+	//contains the form of a valid phone number and ensures that the inputed
+	//phone number mathces 
+	function validatePhone(phone)
+	{
+		var form = 
+		/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+		return form.test(phone);
+	}
+	
+	
+</script>
+
+<h1>Jade Delight</h1>
+<form
+name = "order"
+method = "post"
+onsubmit = "return validate()"
+>
+
+First Name: <input type="text"  name='fname' /></br></br>
+Last Name*:  <input type="text"  name='lname' />
+<div id="errLName" class="errMsg">Last name is required</div><br/></br>
+
+<div id="hide">
+	Street*: <input type="text"  name='street' />
+	<div id="errStreet" class="errMsg">Street is required</div><br/></br>
+	City*: <input type="text"  name='city' />
+	<div id="errCity" class="errMsg">City is required</div><br/></br>
+</div>
+
+Phone*: <input type="text"  name='phone' />
+<div id="errPhone" class="errMsg">A valid phone number is required</div><br/>
+
+<p> 
+	<input type="radio"  name="p_or_d" value = "pickup" checked="checked"/>
+	Pickup  
+	<input type="radio"  name='p_or_d' value = 'delivery'/>
+	Delivery
+</p>
+
+<div id="errSelect" class="errMsg">At least 1 item must be ordered</div>
+<br/></br>
+
+<table border="0" cellpadding="3">
+	<tr>
+		<th>Select Item</th>
+		<th>Item Name</th>
+		<th>Cost Each</th>
+		<th>Total Cost</th>
+	</tr>
+	<script language="javascript">
+	
+	var s = "";
+	for (i=0; i< menuItems.length; i++)
+	{
+		s += "<tr><td>";
+		s += makeSelect("quan" + i, 0, 10);
+		s += "</td><td>" + menuItems[i].name + "</td>";
+		s += "<td> $ " + menuItems[i].cost.toFixed(2) + "</td>";
+		s += "<td>$<input type='text' name='cost'/></td></tr>";
+	}
+	document.writeln(s);
+	
+	
+	
+</script>
+</table>
+<p>Subtotal: 
+	$<input type="text"  name='subtotal' id="subtotal" />
+</p>
+<p>Mass tax 6.25%:
+	$ <input type="text"  name='tax' id="tax" />
+</p>
+<p>Total: $ <input type="text"  name='total' id="total" />
+</p>
+
+<input type = "submit" value = "Submit Order" />
+
+</form>
+</body>
+</html>
